@@ -19,6 +19,9 @@ import com.soumeswar.anonchat.network.OnionServer
 import com.soumeswar.anonchat.tor.TorManager
 import com.soumeswar.anonchat.tor.TorStatusReceiver
 import org.torproject.jni.TorService.ACTION_STATUS
+import com.soumeswar.anonchat.crypto.IdentityManager
+import java.security.KeyPair
+
 class ChatForegroundService : Service() {
     companion object {
         const val CHANNEL_ID = "CHANNEL_1"
@@ -60,14 +63,19 @@ class ChatForegroundService : Service() {
         )
     }
 
+    private lateinit var identity : KeyPair
+
     private fun onTorReady() {
         updateNotification("Tor Service is initialized successfully! Starting Chat Service...")
 
         val onionClient = OnionClient("127.0.0.1",9050)
         chatRepository = ChatRepository(onionClient)
 
+        identity = IdentityManager.loadOrCreate(this)
+
         onionServer = chatRepository.startServer(
-            port = 7777
+            port = 7777,
+            identity = identity
         ) { chat ->
             notifyChatUpdate(chat)
         }

@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "com.soumeswar.anonchat"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.soumeswar.anonchat"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -40,8 +40,9 @@ android {
 }
 
 dependencies {
-    implementation("info.guardianproject:tor-android:0.4.8.19")
-    implementation("info.guardianproject:jtorctl:0.4.5.7")
+    implementation(libs.tor.android)
+    implementation(libs.jtorctl)
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

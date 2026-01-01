@@ -6,6 +6,7 @@ import com.soumeswar.anonchat.network.OnionServer
 import com.soumeswar.anonchat.data.Message
 import com.soumeswar.anonchat.data.Peer
 import java.net.Socket
+import java.security.KeyPair
 import java.util.concurrent.ConcurrentHashMap
 
 class ChatRepository(
@@ -14,10 +15,11 @@ class ChatRepository(
     private val chats = ConcurrentHashMap<String, Chat>();
     fun startServer(
         port : Int,
+        identity : KeyPair,
         onUpdate : (Chat) -> Unit
     ) : OnionServer {
-        val server = OnionServer(port) { raw, socket ->
-            handleIncoming()
+        val server = OnionServer(port, identity) { raw, socket ->
+            handleIncoming(raw, socket, onUpdate)
         }
         server.start()
         return server
